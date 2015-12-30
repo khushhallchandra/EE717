@@ -1,0 +1,99 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+	int key;
+	struct node *left, *right;
+};
+
+struct node *newNode(int item){
+	struct node *temp = (struct node *)malloc(sizeof(struct node));
+	temp->key = item;
+	temp->left = temp->right = NULL;
+	return temp;
+}
+
+void inorder(struct node *root)
+{
+	if (root != NULL)
+	{
+		inorder(root->left);
+		printf("%c", root->key);
+		inorder(root->right);
+	}
+}
+
+void preorder(struct node* root){
+    if(root!=NULL){
+        printf("%c", root->key);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+struct node* insert(struct node* node, int key){
+	if (node == NULL) 
+		return newNode(key);
+
+	if (key < node->key)
+		node->left = insert(node->left, key);
+	else if (key > node->key)
+		node->right = insert(node->right, key); 
+
+	return node;
+}
+
+struct node *lca(struct node* root, int n1, int n2){
+    if (root == NULL) return NULL;
+ 
+    if (root->key > n1 && root->key > n2)
+        return lca(root->left, n1, n2);
+ 
+    if (root->key < n1 && root->key < n2)
+        return lca(root->right, n1, n2);
+ 
+    return root;
+}
+
+int main(){
+	int N, i,k;
+	char *A;
+	scanf("%d",&N);
+	A = (char *) malloc(sizeof(char)*N);
+    if(A==NULL)
+        return 1;
+
+    for(i=0; i<N; i++){
+        scanf("%s",&A[i]);
+    }
+	struct node *root = NULL;
+	root = insert(root, A[0]);
+ for(i=1; i<N; i++){
+insert(root, A[i]);
+}
+
+scanf("%d",&k);
+char c1,c2;
+int j;
+char str1[4];
+for(i=0; i<k; i++){
+for(j=0; j<2; j++){
+scanf("%s",str1);
+
+if(j==0)c1=str1[0];
+else c2=str1[0];
+}
+	struct node *t = lca(root, c1,c2);
+	printf("%c\n",  t->key);
+	
+	printf("(");
+	preorder(t);
+	printf(")(");
+	inorder(t);
+	printf(")\n");
+}
+
+
+
+	return 0;
+}
